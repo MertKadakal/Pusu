@@ -6,6 +6,7 @@ public class Ork extends Types {
         this.id = id;
         this.max_move = Constants.orkMaxMove;
         this.hp = Constants.orkHP;
+        this.def_hp = Constants.orkHP;
         this.ap = Constants.orkAP;
         this.pos[0] = Integer.parseInt(posx);
         this.pos[1] = Integer.parseInt(posy);
@@ -65,6 +66,32 @@ public class Ork extends Types {
             }
         }
         return null;
+    }
+
+    public void write_to_output() {
+        //tabloyu çiz
+        FileOutput.writeToFile(Main.output_path, "**".repeat(Main.board_size+1)+"\n", true, false);
+        for (int i = 0; i < 6;i++) {
+            FileOutput.writeToFile(Main.output_path, "*", true, false);
+            for (int j = 0; j<Main.board_size; j++) {
+                for (String id : Main.filled_cells.keySet()) {
+                    if (Main.filled_cells.get(id).equals(new int[]{i-1, j-1})) {
+                        FileOutput.writeToFile(Main.output_path, id, true, false);
+                        return;
+                    }
+                }
+                FileOutput.writeToFile(Main.output_path, "  ", true, false);
+            }
+        }
+        FileOutput.writeToFile(Main.output_path, "**".repeat(Main.board_size+1)+"\n", true, false);
+
+        //Eleman ve hp'lerini yaz
+        for (Types t : Main.zorde_types) {
+            FileOutput.writeToFile(Main.output_path, String.format("%s %s (%s)", t.id, t.hp, t.def_hp), true, false);
+        }
+        for (Types t : Main.caliance_types) {
+            FileOutput.writeToFile(Main.output_path, String.format("%s %s (%s)", t.id, t.hp, t.def_hp), true, false);
+        }
     }
 
     @Override
@@ -137,6 +164,7 @@ public class Ork extends Types {
                     }
                 }
             }
+            write_to_output();
         }
     }
 }

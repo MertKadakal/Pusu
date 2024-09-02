@@ -4,6 +4,7 @@ public abstract class Types {
     int max_move;
     int hp;
     int ap;
+    int def_hp;
 
     abstract void move(String move);
 }
