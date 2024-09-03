@@ -1,7 +1,7 @@
 public class Constants {
 	
 	public static final int orkAP = 30;
-	public static final int orkHP = 10;
+	public static final int orkHP = 200;
 	public static final int orkMaxMove = 1;
 	
 	public static final int trollAP = 20;

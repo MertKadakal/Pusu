@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Ork extends Types {
+public class Troll extends Types {
     
-    public Ork(String id, String posx, String posy) {
+    public Troll(String id, String posx, String posy) {
         this.id = id;
-        this.max_move = Constants.orkMaxMove;
-        this.hp = Constants.orkHP;
-        this.def_hp = Constants.orkHP;
-        this.ap = Constants.orkAP;
+        this.max_move = Constants.trollMaxMove;
+        this.hp = Constants.trollHP;
+        this.def_hp = Constants.trollHP;
+        this.ap = Constants.trollAP;
         this.pos[0] = Integer.parseInt(posx);
         this.pos[1] = Integer.parseInt(posy);
     }
@@ -82,29 +82,10 @@ public class Ork extends Types {
             for (int i = 0; i < moves.length; i += 2) {
 
                 ArrayList<Types> around_types = all_types_around(); // 8 komşudaki typeları çek
-                // komşulardaki dostlara +10 hp ekle
-                for (Types t : around_types) {
-                    if (t != null && ((t.id.charAt(0) == 'O') || (t.id.charAt(0) == 'T') || (t.id.charAt(0) == 'G'))) {
-                        t.hp += 10;
-                        if (t.getClass().getName().equals("Ork") && t.hp > Constants.orkHP) {
-                            t.hp = Constants.orkHP;
-                        }
-                        if (t.getClass().getName().equals("Troll") && t.hp > Constants.trollHP) {
-                            t.hp = Constants.trollHP;
-                        }
-                        if (t.getClass().getName().equals("Goblin") && t.hp > Constants.goblinHP) {
-                            t.hp = Constants.goblinHP;
-                        }
-                    }
-                }
-                this.hp += 10;
-                if (this.hp > Constants.orkHP) {
-                    this.hp = Constants.orkHP;
-                }
 
                 // hareketi gerçekleştir
-                pos[1] += Integer.parseInt(moves[i]);
-                pos[0] += Integer.parseInt(moves[i + 1]);
+                pos[0] += Integer.parseInt(moves[i]);
+                pos[1] += Integer.parseInt(moves[i + 1]);
                 Main.filled_cells.put(this.id, pos);
 
                 // fight to death kontrolü

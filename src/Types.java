@@ -6,5 +6,5 @@ public abstract class Types {
     int ap;
     int def_hp;
 
-    abstract void move(String move);
+    abstract boolean move(String move);
 }

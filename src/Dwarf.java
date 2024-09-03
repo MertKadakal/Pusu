@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Ork extends Types {
-    
-    public Ork(String id, String posx, String posy) {
+public class Dwarf extends Types {
+
+    public Dwarf(String id, String posx, String posy) {
         this.id = id;
-        this.max_move = Constants.orkMaxMove;
-        this.hp = Constants.orkHP;
-        this.def_hp = Constants.orkHP;
-        this.ap = Constants.orkAP;
+        this.max_move = Constants.dwarfMaxMove;
+        this.hp = Constants.dwarfHP;
+        this.def_hp = Constants.dwarfHP;
+        this.ap = Constants.dwarfAP;
         this.pos[0] = Integer.parseInt(posx);
         this.pos[1] = Integer.parseInt(posy);
     }
@@ -58,21 +58,28 @@ public class Ork extends Types {
 
     public Types check_if_the_cell_is_filled(int x, int y) {
         int[] targetPos = {pos[0] + x, pos[1] + y};
-        for (int[] filledPos : Main.filled_cells.values()) {
-            if (Arrays.equals(filledPos, targetPos)) {
-                for (Types t : Main.caliance_types) {
-                    if (Arrays.equals(t.pos, targetPos)) {
-                        return t;
-                    }
+        if (containsValueInFilledCells(targetPos)) {
+            for (Types t : Main.caliance_types) {
+                if (Arrays.equals(t.pos, targetPos)) {
+                    return t;
                 }
-                for (Types t : Main.zorde_types) {
-                    if (Arrays.equals(t.pos, targetPos)) {
-                        return t;
-                    }
+            }
+            for (Types t : Main.zorde_types) {
+                if (Arrays.equals(t.pos, targetPos)) {
+                    return t;
                 }
             }
         }
         return null;
+    }
+
+    public boolean containsValueInFilledCells(int[] target) {
+        for (int[] value : Main.filled_cells.values()) {
+            if (Arrays.equals(value, target)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -81,38 +88,22 @@ public class Ork extends Types {
             String[] moves = move.split(";");
             for (int i = 0; i < moves.length; i += 2) {
 
-                ArrayList<Types> around_types = all_types_around(); // 8 komşudaki typeları çek
-                // komşulardaki dostlara +10 hp ekle
-                for (Types t : around_types) {
-                    if (t != null && ((t.id.charAt(0) == 'O') || (t.id.charAt(0) == 'T') || (t.id.charAt(0) == 'G'))) {
-                        t.hp += 10;
-                        if (t.getClass().getName().equals("Ork") && t.hp > Constants.orkHP) {
-                            t.hp = Constants.orkHP;
-                        }
-                        if (t.getClass().getName().equals("Troll") && t.hp > Constants.trollHP) {
-                            t.hp = Constants.trollHP;
-                        }
-                        if (t.getClass().getName().equals("Goblin") && t.hp > Constants.goblinHP) {
-                            t.hp = Constants.goblinHP;
-                        }
-                    }
-                }
-                this.hp += 10;
-                if (this.hp > Constants.orkHP) {
-                    this.hp = Constants.orkHP;
-                }
-
                 // hareketi gerçekleştir
                 pos[1] += Integer.parseInt(moves[i]);
                 pos[0] += Integer.parseInt(moves[i + 1]);
                 Main.filled_cells.put(this.id, pos);
 
-                // fight to death kontrolü
+                ArrayList<Types> around_types = all_types_around(); // 8 komşudaki typeları çek
+
+                // Fight to death kontrolü
+                boolean check = false;
                 Types defender = null;
-                for (String id : Main.filled_cells.keySet()) {
-                    if (Arrays.equals(Main.filled_cells.get(id), this.pos) && !id.equals(this.id)) {
-                        for (Types t : Main.caliance_types) {
-                            if (Arrays.equals(t.pos, this.pos)) {
+                int[] currentPosition = {this.pos[0], this.pos[1]};
+                for (int[] pos : Main.filled_cells.values()) {
+                    if (Arrays.equals(pos, currentPosition)) {
+                        check = true;
+                        for (Types t : Main.zorde_types) {
+                            if (Arrays.equals(t.pos, currentPosition)) {
                                 defender = t;
                                 break;
                             }
@@ -120,33 +111,32 @@ public class Ork extends Types {
                         break;
                     }
                 }
-
-                if (defender != null) { // true ise
-                    // rakibin hp'sini düşür
+                if (check && defender != null) { // True ise
+                    // Rakibin HP'sini düşür
                     defender.hp -= this.ap;
 
-                    if (defender.hp > this.hp) { // rakibin hp'si daha büyükse sen ölürsün
+                    if (defender.hp > this.hp) { // Rakibin HP'si daha büyükse sen ölürsün
                         Main.filled_cells.remove(this.id);
-                        Main.zorde_types.remove(this);
-                    } else if (defender.hp == this.hp) { // hp'ler eşitse ikiniz de ölürsünüz
+                        Main.caliance_types.remove(this);
+                    } else if (defender.hp == this.hp) { // HP'ler eşitse ikiniz de ölürsünüz
                         Main.filled_cells.remove(this.id);
-                        Main.zorde_types.remove(this);
+                        Main.caliance_types.remove(this);
                         Main.filled_cells.remove(defender.id);
-                        Main.caliance_types.remove(defender);
-                    } else { // senin hp'n daha büyükse o ölür
+                        Main.zorde_types.remove(defender);
+                    } else { // Senin HP'n daha büyükse o ölür
                         Main.filled_cells.remove(defender.id);
-                        Main.caliance_types.remove(defender);
+                        Main.zorde_types.remove(defender);
                     }
                     break;
 
-                } else { // false ise
+                } else { // False ise
                     // 8 yön için de saldırı
                     for (Types t : around_types) {
-                        if (t != null && ((t.id.charAt(0) == 'H') || (t.id.charAt(0) == 'E') || (t.id.charAt(0) == 'D'))) {
+                        if (t != null && ((t.id.charAt(0) == 'O') || (t.id.charAt(0) == 'T') || (t.id.charAt(0) == 'G'))) {
                             t.hp -= this.ap;
                             if (t.hp < 0) {
                                 Main.filled_cells.remove(t.id);
-                                Main.caliance_types.remove(t);
+                                Main.zorde_types.remove(t);
                             }
                         }
                     }
