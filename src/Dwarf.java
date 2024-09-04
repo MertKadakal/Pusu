@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Dwarf extends Types {
-    int count = 0;
-
     public Dwarf(String id, String posx, String posy) {
         this.id = id;
         this.max_move = Constants.dwarfMaxMove;
@@ -24,23 +22,11 @@ public class Dwarf extends Types {
                 moves_y.add(Integer.parseInt(move.split(";")[i]));
             }
         }
-        int sum_x = 0;
-        int sum_y = 0;
-        for (Integer num : moves_x) {
-            sum_x += num;
-        }
-        for (Integer num : moves_y) {
-            sum_y += num;
-        }
 
         if (move.split(";").length != this.max_move * 2) {
             FileOutput.writeToFile(Main.output_path, "Error : Move sequence contains wrong number of move steps. Input line ignored.\n\n", true, false);
             return false;
-        } else if ((pos[1] + sum_x < 0) || (pos[1] + sum_x > Main.board_size-1) || (pos[0] + sum_y < 0) || (pos[0] + sum_y > Main.board_size-1)) {
-            FileOutput.writeToFile(Main.output_path, "Error : Game board boundaries are exceeded. Input line ignored.\n\n", true, false);
-            return false;
         }
-
         return true;
     }
 
@@ -87,9 +73,6 @@ public class Dwarf extends Types {
     String move(String move) {
         exceeded = false;
         if (check_exceptions(move)) {
-            count++;
-            System.out.println("Dwarf'a giriş --> " + count);
-
             String[] moves = move.split(";");
             for (int i = 0; i < moves.length; i += 2) {
 
@@ -105,11 +88,13 @@ public class Dwarf extends Types {
                     }
                 }
 
+                // sıradaki hücre tablo dışındaysa bitir
                 if ((pos[1] + Integer.parseInt(moves[i]) < 0) || (pos[1] + Integer.parseInt(moves[i]) > Main.board_size-1) || (pos[0] + Integer.parseInt(moves[i+1]) < 0) || (pos[0] + Integer.parseInt(moves[i+1]) > Main.board_size-1)) {
                     exceeded = true;
                     break;
                 }
 
+                //hareketi gerçekleştir
                 pos[1] += Integer.parseInt(moves[i]);
                 pos[0] += Integer.parseInt(moves[i + 1]);
                 Main.filled_cells.put(this.id, pos);

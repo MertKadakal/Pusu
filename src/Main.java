@@ -12,6 +12,9 @@ public class Main {
     static ArrayList<Types> caliance_types;
     static ArrayList<Types> zorde_types;
 
+    /**
+     * Hareket gerçeleştirildikten sonra tablo ve altına karakterlerin kalan ve default HP değerleri output dosyasına yazılır.
+     */
     public static void write_table_on_output() {
         FileOutput.writeToFile(output_path, "**".repeat(Main.board_size +1) + "\n", true, false);
         for (int k = 0; k < board_size; k++) {
@@ -51,6 +54,11 @@ public class Main {
         FileOutput.writeToFile(Main.output_path, "\n", true, false);
     }
 
+    /**
+     * Bu kod ilk çalıştırılır. Verilen dosya pathlerinden başlangıç değerleri ve komutlar elde edilir. Zorde ve Calliance türündeki karakterler
+     * oluşturulurarak filled_cells mapine kaydedilir. Burada "Karakter ID'si: Karakterin konumu" şeklinde veri depolanır. Ayrıca karakterlerin
+     * de tutulduğu iki tür için de iki ArrayList vardır. Bu 3 yapı oluşturulduktan sonra komut satırları sırayla okunarak işlemler yapılır.
+     */
     public static void main(String[] args) throws IOException {
         FileOutput.writeToFile(output_path, "", false, false);
         String[] initials_txt = FileInput.readFile("IO_3\\initials.txt", false, true);
@@ -112,8 +120,6 @@ public class Main {
 
         //commands.txt'i oku ve işle
         for (String line : commands_txt) {
-            //FileOutput.writeToFile(output_path, line + "\n", true, false);
-
             while (true) {
                 int ind = 0;
                 
@@ -130,8 +136,6 @@ public class Main {
                                 FileOutput.writeToFile(output_path, "Error : Game board boundaries are exceeded. Input line ignored.\n\n", true, false);
                                 break;
                         }
-                        //FileOutput.writeToFile(output_path, move + "\n\n", true, false);
-
                         break;
                     }
                     ind++;
@@ -151,7 +155,6 @@ public class Main {
                                 FileOutput.writeToFile(output_path, "Error : Game board boundaries are exceeded. Input line ignored.\n\n", true, false);
                                 break;
                         }
-                        //FileOutput.writeToFile(output_path, move + "\n\n", true, false);
                         break;
                     }
                     ind++;

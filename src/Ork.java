@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Ork extends Types {
-    int count=0;
     
     public Ork(String id, String posx, String posy) {
         this.id = id;
@@ -24,23 +23,11 @@ public class Ork extends Types {
                 moves_y.add(Integer.parseInt(move.split(";")[i]));
             }
         }
-        int sum_x = 0;
-        int sum_y = 0;
-        for (Integer num : moves_x) {
-            sum_x += num;
-        }
-        for (Integer num : moves_y) {
-            sum_y += num;
-        }
 
         if (move.split(";").length != this.max_move * 2) {
             FileOutput.writeToFile(Main.output_path, "Error : Move sequence contains wrong number of move steps. Input line ignored.\n\n", true, false);
             return false;
-        } else if ((pos[1] + sum_x < 0) || (pos[1] + sum_x > Main.board_size-1) || (pos[0] + sum_y < 0) || (pos[0] + sum_y > Main.board_size-1)) {
-            FileOutput.writeToFile(Main.output_path, "Error : Game board boundaries are exceeded. Input line ignored.\n\n", true, false);
-            return false;
         }
-
         return true;
     }
 
@@ -86,7 +73,6 @@ public class Ork extends Types {
     @Override
     String move(String move) {
         exceeded = false;
-        count++;
         ArrayList<Types> around_types = all_types_around(); // 8 komşudaki typeları çek
 
         // komşulardaki dostlara +10 hp ekle
@@ -125,11 +111,13 @@ public class Ork extends Types {
                     }
                 }
                 
+                // sıradaki hücre tablo dışındaysa bitir
                 if ((pos[1] + Integer.parseInt(moves[i]) < 0) || (pos[1] + Integer.parseInt(moves[i]) > Main.board_size-1) || (pos[0] + Integer.parseInt(moves[i+1]) < 0) || (pos[0] + Integer.parseInt(moves[i+1]) > Main.board_size-1)) {
                     exceeded = true;
                     break;
                 }
 
+                //hareketi gerçekleştir
                 pos[1] += Integer.parseInt(moves[i]);
                 pos[0] += Integer.parseInt(moves[i + 1]);
                 Main.filled_cells.put(this.id, pos);
