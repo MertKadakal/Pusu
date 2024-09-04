@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class Main {
-    static String output_path = "output.txt";
+    static String output_path = "v2output.txt";
     static int board_size;
     static HashMap<String, int[]> filled_cells;
     static ArrayList<Types> caliance_types;
@@ -46,15 +46,15 @@ public class Main {
         // Eleman ve hp'lerini yaz
         for (Types t : all_types) {
             String def_hp = "("+t.def_hp+")";
-            FileOutput.writeToFile(Main.output_path, String.format("%s %s %5s\n", t.id, t.hp, def_hp), true, false);
+            FileOutput.writeToFile(Main.output_path, String.format("%s\t%s\t%s\n", t.id, t.hp, def_hp), true, false);
         }
         FileOutput.writeToFile(Main.output_path, "\n", true, false);
     }
 
     public static void main(String[] args) throws IOException {
         FileOutput.writeToFile(output_path, "", false, false);
-        String[] initials_txt = FileInput.readFile("IO_1\\initials.txt", false, true);
-        String[] commands_txt = FileInput.readFile("IO_1\\commands.txt", false, true);
+        String[] initials_txt = FileInput.readFile("IO_3\\initials.txt", false, true);
+        String[] commands_txt = FileInput.readFile("IO_3\\commands.txt", false, true);
         board_size = Integer.parseInt(initials_txt[1].split("x")[0]);
         caliance_types = new ArrayList<>();
         zorde_types = new ArrayList<>();
@@ -109,8 +109,11 @@ public class Main {
         }
 
         write_table_on_output();
+
         //commands.txt'i oku ve işle
         for (String line : commands_txt) {
+            FileOutput.writeToFile(output_path, line + "\n", true, false);
+
             while (true) {
                 int ind = 0;
                 
@@ -141,12 +144,13 @@ public class Main {
 
             //oyun bitti mi kontrol et
             if (zorde_types.size() == 0) {
-                FileOutput.writeToFile(Main.output_path, "Game Finished\nCaliance Wins", true, false);
+                FileOutput.writeToFile(Main.output_path, "\nGame Finished\nCalliance Wins", true, false);
+                break;
             }
             if (caliance_types.size() == 0) {
-                FileOutput.writeToFile(Main.output_path, "Game Finished\nZorde Wins", true, false);
+                FileOutput.writeToFile(Main.output_path, "\nGame Finished\nZorde Wins", true, false);
+                break;
             }
         }
-
     }
 }
