@@ -54,8 +54,6 @@ T0	150	(150)
 
 T0	20	(150)
 
-Error : Game board boundaries are exceeded. Input line ignored.
-
 
 Game Finished
 Zorde Wins

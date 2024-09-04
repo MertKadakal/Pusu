@@ -85,8 +85,8 @@ public class Ork extends Types {
 
     @Override
     String move(String move) {
+        exceeded = false;
         count++;
-        System.out.println("Ork'a giriş --> " + count);
         ArrayList<Types> around_types = all_types_around(); // 8 komşudaki typeları çek
 
         // komşulardaki dostlara +10 hp ekle

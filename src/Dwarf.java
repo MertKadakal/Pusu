@@ -85,6 +85,7 @@ public class Dwarf extends Types {
 
     @Override
     String move(String move) {
+        exceeded = false;
         if (check_exceptions(move)) {
             count++;
             System.out.println("Dwarf'a giriş --> " + count);

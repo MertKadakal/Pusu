@@ -84,6 +84,7 @@ public class Human extends Types {
 
     @Override
     String move(String move) {
+        exceeded = false;
         if (check_exceptions(move)) {
             String[] moves = move.split(";");
             for (int i = 0; i < moves.length; i += 2) {
