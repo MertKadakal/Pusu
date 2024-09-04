@@ -83,7 +83,7 @@ public class Human extends Types {
     }
 
     @Override
-    boolean move(String move) {
+    String move(String move) {
         if (check_exceptions(move)) {
             String[] moves = move.split(";");
             for (int i = 0; i < moves.length; i += 2) {
@@ -100,10 +100,16 @@ public class Human extends Types {
                     }
                 }
 
+                if ((pos[1] + Integer.parseInt(moves[i]) < 0) || (pos[1] + Integer.parseInt(moves[i]) > Main.board_size-1) || (pos[0] + Integer.parseInt(moves[i+1]) < 0) || (pos[0] + Integer.parseInt(moves[i+1]) > Main.board_size-1)) {
+                    exceeded = true;
+                    break;
+                }
+                
                 pos[1] += Integer.parseInt(moves[i]);
                 pos[0] += Integer.parseInt(moves[i + 1]);
                 Main.filled_cells.put(this.id, pos);
                 ArrayList<Types> around_types = all_types_around(); // 8 komşudaki typeları çek
+
 
                 // Fight to death kontrolü
                 boolean check = false;
@@ -171,8 +177,13 @@ public class Human extends Types {
                     }
                 }
             }
-            return true;
+            if (exceeded) {
+                return "exceeded";
+            }
+            else {
+                return "done";
+            }
         }
-        return false;
+        return "failed";
     }
 }

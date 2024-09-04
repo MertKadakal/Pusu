@@ -5,6 +5,7 @@ public abstract class Types {
     int hp;
     int ap;
     int def_hp;
+    boolean exceeded = false;
 
-    abstract boolean move(String move);
+    abstract String move(String move);
 }

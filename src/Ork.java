@@ -84,7 +84,7 @@ public class Ork extends Types {
     }
 
     @Override
-    boolean move(String move) {
+    String move(String move) {
         count++;
         System.out.println("Ork'a giriş --> " + count);
         ArrayList<Types> around_types = all_types_around(); // 8 komşudaki typeları çek
@@ -125,6 +125,11 @@ public class Ork extends Types {
                     }
                 }
                 
+                if ((pos[1] + Integer.parseInt(moves[i]) < 0) || (pos[1] + Integer.parseInt(moves[i]) > Main.board_size-1) || (pos[0] + Integer.parseInt(moves[i+1]) < 0) || (pos[0] + Integer.parseInt(moves[i+1]) > Main.board_size-1)) {
+                    exceeded = true;
+                    break;
+                }
+
                 pos[1] += Integer.parseInt(moves[i]);
                 pos[0] += Integer.parseInt(moves[i + 1]);
                 Main.filled_cells.put(this.id, pos);
@@ -198,8 +203,13 @@ public class Ork extends Types {
                     }
                 }
             }
-            return true;
+            if (exceeded) {
+                return "exceeded";
+            }
+            else {
+                return "done";
+            }
         }
-        return false;
+        return "failed";
     }
 }

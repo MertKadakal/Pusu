@@ -112,7 +112,7 @@ public class Main {
 
         //commands.txt'i oku ve işle
         for (String line : commands_txt) {
-            FileOutput.writeToFile(output_path, line + "\n", true, false);
+            //FileOutput.writeToFile(output_path, line + "\n", true, false);
 
             while (true) {
                 int ind = 0;
@@ -120,9 +120,18 @@ public class Main {
                 //for types of caliance
                 for (Types type : caliance_types) {
                     if (type.id.equals(line.split(" ")[0])) {
-                        if (caliance_types.get(ind).move(line.split(" ")[1])) {
-                            write_table_on_output();
+                        String move_result = caliance_types.get(ind).move(line.split(" ")[1]);
+                        switch (move_result) {
+                            case "done":
+                                write_table_on_output();
+                                break;
+                            case "exceeded":
+                                write_table_on_output();
+                                FileOutput.writeToFile(output_path, "Error : Game board boundaries are exceeded. Input line ignored.\n\n", true, false);
+                                break;
                         }
+                        //FileOutput.writeToFile(output_path, move + "\n\n", true, false);
+
                         break;
                     }
                     ind++;
@@ -132,9 +141,17 @@ public class Main {
                 ind = 0;
                 for (Types type : zorde_types) {
                     if (type.id.equals(line.split(" ")[0])) {
-                        if (zorde_types.get(ind).move(line.split(" ")[1])) {
-                            write_table_on_output();
+                        String move_result = zorde_types.get(ind).move(line.split(" ")[1]);
+                        switch (move_result) {
+                            case "done":
+                                write_table_on_output();
+                                break;
+                            case "exceeded":
+                                write_table_on_output();
+                                FileOutput.writeToFile(output_path, "Error : Game board boundaries are exceeded. Input line ignored.\n\n", true, false);
+                                break;
                         }
+                        //FileOutput.writeToFile(output_path, move + "\n\n", true, false);
                         break;
                     }
                     ind++;

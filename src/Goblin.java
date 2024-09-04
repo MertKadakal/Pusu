@@ -78,11 +78,10 @@ public class Goblin extends Types {
     }
 
     @Override
-    boolean move(String move) {
+    String move(String move) {
         if (check_exceptions(move)) {
             String[] moves = move.split(";");
             for (int i = 0; i < moves.length; i += 2) {
-
                 
                 // hedef hücrede dost varmı kontrol et: yoksa hareketi gerçekleştir, varsa dur
                 int[] target = {pos[1] + Integer.parseInt(moves[i]), pos[0] + Integer.parseInt(moves[i + 1])};
@@ -94,6 +93,11 @@ public class Goblin extends Types {
                             }
                         }
                     }
+                }
+
+                if ((pos[1] + Integer.parseInt(moves[i]) < 0) || (pos[1] + Integer.parseInt(moves[i]) > Main.board_size-1) || (pos[0] + Integer.parseInt(moves[i+1]) < 0) || (pos[0] + Integer.parseInt(moves[i+1]) > Main.board_size-1)) {
+                    exceeded = true;
+                    break;
                 }
 
                 pos[1] += Integer.parseInt(moves[i]);
@@ -168,8 +172,13 @@ public class Goblin extends Types {
                     }
                 }
             }
-            return true;
+            if (exceeded) {
+                return "exceeded";
+            }
+            else {
+                return "done";
+            }
         }
-        return false;
+        return "failed";
     }
 }
